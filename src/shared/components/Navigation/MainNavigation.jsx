@@ -16,7 +16,7 @@ const MainNavigation = (props) => {
     setIsOpen(false);
   };
   return (
-    <>
+    <React.Fragment>
       {isOpen && <Backdrop onClick={handleDrawerClose} />}
 
       <SideDrawer show={isOpen} onClick={handleDrawerClose}>
@@ -41,7 +41,7 @@ const MainNavigation = (props) => {
           <NavLinks />
         </nav>
       </MainHeader>
-    </>
+    </React.Fragment>
   );
 };
 export default MainNavigation;
