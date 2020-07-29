@@ -4,7 +4,12 @@ import "./NewPlace.css";
 
 const NewPlace = () => (
   <form className="place-form">
-    <Input type={"text"} label={"Title"} element={"input"} />
+    <Input
+      type={"text"}
+      label={"Title"}
+      element={"input"}
+      errorText={"Please Enter Valid Title"}
+    />
   </form>
 );
 
