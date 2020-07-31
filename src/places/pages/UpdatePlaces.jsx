@@ -8,6 +8,7 @@ import {
 import Button from "../../shared/FormElements/Button";
 import "./PlaceForm.css";
 import useFormHook from "../../shared/hooks/formHook";
+import Card from "../../shared/components/UIElements/Card";
 const img = require("../../images/The Vigilante's Code (A Watch Dogs Fanfic).jpeg");
 
 const DUMMY_PLACES = [
@@ -52,16 +53,18 @@ const UpdatePlace = (props) => {
     true
   );
   useEffect(() => {
-    setFormData(
-      {
-        title: { value: placeToUpdate.title, isValid: true },
-        description: {
-          value: placeToUpdate.description,
-          isValid: true,
+    if (placeToUpdate) {
+      setFormData(
+        {
+          title: { value: placeToUpdate.title, isValid: true },
+          description: {
+            value: placeToUpdate.description,
+            isValid: true,
+          },
         },
-      },
-      true
-    );
+        true
+      );
+    }
     setIsLoading(false);
   }, [setFormData, placeToUpdate]);
   const updateHandler = (event) => {
@@ -71,7 +74,9 @@ const UpdatePlace = (props) => {
   if (!placeToUpdate) {
     return (
       <div className="center">
-        <h2>Couldn't Find Place</h2>
+        <Card>
+          <h2>Couldn't Find Place</h2>
+        </Card>
       </div>
     );
   }
