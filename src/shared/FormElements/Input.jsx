@@ -1,31 +1,36 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import "./Input.css";
 import { validate } from "../util/Validator";
 
-const Input = (props) => {
-  const inputReducer = (state, action) => {
-    switch (action.type) {
-      case "CHANGE":
-        return {
-          ...state,
-          isValid: validate(action.data, action.validators),
-          value: action.data,
-        };
-      case "TOUCH": {
-        return {
-          ...state,
-          isTouched: true,
-        };
-      }
-      default:
-        return state;
+const inputReducer = (state, action) => {
+  switch (action.type) {
+    case "CHANGE":
+      return {
+        ...state,
+        isValid: validate(action.data, action.validators),
+        value: action.data,
+      };
+    case "TOUCH": {
+      return {
+        ...state,
+        isTouched: true,
+      };
     }
-  };
+    default:
+      return state;
+  }
+};
+const Input = (props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     isValid: false,
     isTouched: false,
     value: "",
   });
+  const { onInput, id } = props;
+  const { value, isValid } = inputState;
+  useEffect(() => {
+    onInput(id, value, isValid);
+  }, [id, value, isValid,onInput]);
   const changeHandler = (event) => {
     dispatch({
       type: "CHANGE",
