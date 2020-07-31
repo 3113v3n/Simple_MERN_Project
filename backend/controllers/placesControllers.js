@@ -1,4 +1,5 @@
 const HttpErrorHandler = require("../model/errorHandler");
+const uuid = require("uuid");
 const DUMMY_PLACES = [
   {
     id: "p1",
@@ -47,5 +48,44 @@ const getPlaceByUserId = (req, res, next) => {
   res.json({ place: place });
 };
 
+const createPlace = (req, res, next) => {
+  const { title, description, coordinates, address, creator } = req.body;
+  const newPlace = {
+    id: uuid(),
+    title,
+    description,
+    location: coordinates,
+    address,
+    creator,
+  };
+  DUMMY_PLACES.push(newPlace);
+  res.status(201).json({ place: newPlace });
+};
+
+const deletePlaceById = (req, res, next) => {
+  const placeId = req.params.pid;
+  const placeToDelete = DUMMY_PLACES.filter((place) => place.id !== placeId);
+  res.status(200).json({ message: "Deleted Successfully" });
+};
+const patchPlaceByid = (req, res, next) => {
+  const { title, description } = req.body;
+  const placeId = req.params.pid;
+  const placeToUpdate = {
+    ...DUMMY_PLACES.find((place) => place.id === placeId),
+  };
+  //the spread operator creates a copy of original array [immutability]
+  const placeIndex = DUMMY_PLACES.findIndex((place) => place.id === placeId);
+  //find index of object to update
+  placeToUpdate.title = title;
+  placeToUpdate.description = description;
+  //replace the object with new values
+  DUMMY_PLACES[placeIndex] = placeToUpdate;
+
+  res.status(200).json({ place: placeToUpdate });
+};
+
 exports.getPlaceById = getPlaceById;
 exports.getPlaceByUserId = getPlaceByUserId;
+exports.createPlace = createPlace;
+exports.deletePlaceById = deletePlaceById;
+exports.patchPlaceByid = patchPlaceByid;
