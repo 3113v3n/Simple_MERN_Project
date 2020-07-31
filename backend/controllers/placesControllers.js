@@ -1,6 +1,6 @@
 const HttpErrorHandler = require("../model/errorHandler");
 const uuid = require("uuid");
-const DUMMY_PLACES = [
+let DUMMY_PLACES = [
   {
     id: "p1",
     title: "Game of Thrones",
@@ -36,16 +36,16 @@ const getPlaceById = (req, res, next) => {
   res.json({ place: place });
 };
 
-const getPlaceByUserId = (req, res, next) => {
+const getPlacesByUserId = (req, res, next) => {
   const userId = req.params.uid;
-  const place = DUMMY_PLACES.find((p) => p.creator === userId);
-  if (!place) {
+  const places = DUMMY_PLACES.filter((p) => p.creator === userId);
+  if (!places || places.length === 0) {
     throw new HttpErrorHandler(
       "Couldnt find a place with the provided id",
       404
     );
   }
-  res.json({ place: place });
+  res.json({ place: places });
 };
 
 const createPlace = (req, res, next) => {
@@ -64,7 +64,7 @@ const createPlace = (req, res, next) => {
 
 const deletePlaceById = (req, res, next) => {
   const placeId = req.params.pid;
-  const placeToDelete = DUMMY_PLACES.filter((place) => place.id !== placeId);
+  DUMMY_PLACES = DUMMY_PLACES.filter((place) => place.id !== placeId);
   res.status(200).json({ message: "Deleted Successfully" });
 };
 const patchPlaceByid = (req, res, next) => {
@@ -85,7 +85,7 @@ const patchPlaceByid = (req, res, next) => {
 };
 
 exports.getPlaceById = getPlaceById;
-exports.getPlaceByUserId = getPlaceByUserId;
+exports.getPlacesByUserId = getPlacesByUserId;
 exports.createPlace = createPlace;
 exports.deletePlaceById = deletePlaceById;
 exports.patchPlaceByid = patchPlaceByid;
