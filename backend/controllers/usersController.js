@@ -1,5 +1,6 @@
 const HttpErrorHandler = require("../model/errorHandler");
 const uuid = require("uuid");
+const { validationResult } = require("express-validator");
 const DUMMY_USER = [
   {
     id: "u1",
@@ -20,6 +21,10 @@ const getAllUsers = (req, res, next) => {
   res.json({ users: NEW_DUMMY_LIST });
 };
 const registerUser = (req, res, next) => {
+  const errorsObject = validationResult(req);
+  if (!errorsObject.isEmpty()) {
+    throw new HttpErrorHandler("Invalid Inputs provided,check your data", 422);
+  }
   const { name, email, password } = req.body;
   const newUser = {
     id: uuid(),
