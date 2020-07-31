@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Input from "../../shared/FormElements/Input";
 import {
@@ -37,10 +37,11 @@ const DUMMY_PLACES = [
   },
 ];
 const UpdatePlace = (props) => {
+  const [loading, setIsLoading] = useState(true);
   const placeId = useParams().placeId;
 
   const placeToUpdate = DUMMY_PLACES.find((place) => place.id === placeId);
-  const [formState, inputHandler] = useFormHook(
+  const [formState, inputHandler, setFormData] = useFormHook(
     {
       title: { value: placeToUpdate.title, isValid: true },
       description: {
@@ -50,6 +51,19 @@ const UpdatePlace = (props) => {
     },
     true
   );
+  useEffect(() => {
+    setFormData(
+      {
+        title: { value: placeToUpdate.title, isValid: true },
+        description: {
+          value: placeToUpdate.description,
+          isValid: true,
+        },
+      },
+      true
+    );
+    setIsLoading(false);
+  }, [setFormData, placeToUpdate]);
   const updateHandler = (event) => {
     event.preventDefault();
     console.log(formState.inputs);
@@ -58,6 +72,13 @@ const UpdatePlace = (props) => {
     return (
       <div className="center">
         <h2>Couldn't Find Place</h2>
+      </div>
+    );
+  }
+  if (loading) {
+    return (
+      <div className="center">
+        <h2>Loading</h2>
       </div>
     );
   }
